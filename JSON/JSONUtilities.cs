@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GHEngineJSON.JSON;
+namespace GHEngine.IO.JSON;
 
 public static class JSONUtilities
 {
