@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GHEngineJSON.JSON;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,7 +66,7 @@ public class JSONList : IList<object?>
         {
             if (isVerified && !isOptional)
             {
-                throw new JSONEntryException($"List entry index was out of bounds {index} for length of {Count}");
+                throw new JSONSchemaException($"List entry index was out of bounds {index} for length of {Count}");
             }
             return false;
         }
@@ -76,7 +77,7 @@ public class JSONList : IList<object?>
 
             if (isVerified && (value == null))
             {
-                throw new JSONEntryException($"Compound at index {index} is null, expected type {typeof(T).FullName}");
+                throw new JSONSchemaException($"Compound at index {index} is null, expected type {typeof(T).FullName}");
             }
 
             return true;
@@ -85,7 +86,7 @@ public class JSONList : IList<object?>
         {
             if (isVerified)
             {
-                throw new JSONEntryException($"List entry at index {index} is of type " +
+                throw new JSONSchemaException($"List entry at index {index} is of type " +
                     $"{_items[index]?.GetType().FullName}, expected {typeof(T).FullName}");
             }
             return false;

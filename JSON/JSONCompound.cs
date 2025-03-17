@@ -1,5 +1,6 @@
 ﻿
 
+using GHEngineJSON.JSON;
 using System.Collections;
 using System.ComponentModel.Design;
 using System.Data.SqlTypes;
@@ -78,14 +79,14 @@ public class JSONCompound : IEnumerable<KeyValuePair<string, object?>>
         {
             if (isVerified && !isOptional)
             {
-                throw new JSONEntryException($"Compound does not contain the entry \"{key}\"");
+                throw new JSONSchemaException($"Compound does not contain the entry \"{key}\"");
             }
             return false;
         }
 
         if (isVerified && (Value == null))
         {
-            throw new JSONEntryException($"Compound entry \"{key}\" is null, expected type {typeof(T).FullName}");
+            throw new JSONSchemaException($"Compound entry \"{key}\" is null, expected type {typeof(T).FullName}");
         }
 
         try
@@ -97,7 +98,7 @@ public class JSONCompound : IEnumerable<KeyValuePair<string, object?>>
         {
             if (isVerified)
             {
-                throw new JSONEntryException($"Compound entry \"{key}\" is of type " +
+                throw new JSONSchemaException($"Compound entry \"{key}\" is of type " +
                     $"{Value?.GetType().FullName}, expected {typeof(T).FullName}");
             }
             return false;
