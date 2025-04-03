@@ -20,4 +20,9 @@ public static class JSONUtilities
         }
         throw new JSONSchemaException("Expected decimal value");
     }
+
+    public static bool IsValidJSONObject(object? value)
+    {
+        return (value == null) || (value is long or double or bool or string or JSONCompound or JSONList);
+    }
 }

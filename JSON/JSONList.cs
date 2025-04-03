@@ -92,10 +92,20 @@ public class JSONList : IList<object?>
         }
     }
 
+    private void VerifyObjectType(object? value)
+    {
+        if (!JSONUtilities.IsValidJSONObject(value))
+        {
+            throw new JSONEntryException($"Invalid type of JSON list element: {value?.GetType().FullName ?? "null"}");
+        }
+    }
+        
+
 
     // Inherited methods.
     public void Add(object? item)
     {
+        VerifyObjectType(item);
         _items.Add(item);
     }
 
@@ -126,6 +136,7 @@ public class JSONList : IList<object?>
 
     public void Insert(int index, object? item)
     {
+        VerifyObjectType(item);
         _items.Insert(index, item);
     }
 
