@@ -10,7 +10,7 @@ namespace GHEngine.IO.JSON;
 public class JSONSerializer
 {
     // Methods.
-    public string Serialize(object JSONObject, bool isFormatted)
+    public string Serialize(object? JSONObject, bool isFormatted)
     {
         return SerializeObject(JSONObject, isFormatted, 1);
     }
