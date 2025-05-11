@@ -21,10 +21,9 @@ public class JSONCompound : IEnumerable<KeyValuePair<string, object?>>
     // Methods.
     public void Add(string key, object? value)
     {
-        if (value != null && !(value is byte or sbyte or short or ushort or int or uint or long or ulong
-            or float or double or bool or string or JSONCompound or JSONList))
+        if (!JSONUtilities.IsValidJSONObject(value))
         {
-            throw new JSONEntryException($"Invalid type of JSON entry: {value.GetType().FullName}");
+            throw new JSONEntryException($"Invalid type of JSON entry: {value?.GetType().FullName ?? "null"}");
         }
         _entries.Add(key,value);
     }
@@ -41,47 +40,47 @@ public class JSONCompound : IEnumerable<KeyValuePair<string, object?>>
 
     public bool Get<T>(string key, out T? value)
     {
-        return Get(key, false, true, default, out value);
+        return Get(key, false, true, default, false, out value);
     }
 
     public T GetOrDefault<T>(string key, T defaultValue)
     {
-        Get(key, false, true, defaultValue, out T? Value);
+        Get(key, false, true, defaultValue, true, out T? Value);
         return Value!;
     }
 
     public T GetVerified<T>(string key)
     {
-        Get(key, true, false, default, out T? Value);
+        Get(key, true, false, default, false, out T? Value);
         return Value!;
     }
 
     public bool GetOptionalVerified<T>(string key, out T? value)
     {
-        return Get(key, true, true, default, out value);
+        return Get(key, true, true, default, false, out value);
     }
 
     public T GetVerifiedOrDefault<T>(string key, T defaultValue)
     {
-        Get(key, true, true, defaultValue, out T? Value);
+        Get(key, true, false, defaultValue, true, out T? Value);
         return Value!;
     }
 
 
     // Private methods.
-    private bool Get<T>(string key, bool isVerified, bool isOptional, T? defaultValue, out T? value)
+    private bool Get<T>(string key, bool isVerified, bool isOptional, T? defaultValue, bool usesDefaultValue, out T? value)
     {
         value = defaultValue;
         if (!_entries.TryGetValue(key, out object? Value))
         {
-            if (isVerified && !isOptional)
+            if (isVerified && !isOptional && !usesDefaultValue)
             {
                 throw new JSONSchemaException($"Compound does not contain the entry \"{key}\"");
             }
             return false;
         }
 
-        if (isVerified && (Value == null))
+        if (isVerified && (Value == null) && !isOptional)
         {
             throw new JSONSchemaException($"Compound entry \"{key}\" is null, expected type {typeof(T).FullName}");
         }
